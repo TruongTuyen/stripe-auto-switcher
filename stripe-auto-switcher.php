@@ -26,6 +26,8 @@ class Stripe_Auto_Switcher {
 
 		add_action( 'update_option_saw-settings', array( $this, 'when_option_updated' ), 10, 3 );
 		add_action( 'activated_plugin', array( $this, 'plugin_activation_redirect' ), PHP_INT_MAX );
+		add_action( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( $this, 'plugin_settings_links' ), 10, 1 );
+
 	}
 
 	public function when_option_updated( $old_value, $value, $option ) {
@@ -209,10 +211,21 @@ class Stripe_Auto_Switcher {
 			$redirect_args = array(
 				'page' => 'saw-settings',
 			);
-			$redirect_url = add_query_arg( $redirect_args, admin_url( 'admin.php' ) );
+			$redirect_url  = add_query_arg( $redirect_args, admin_url( 'admin.php' ) );
 			exit( wp_redirect( $redirect_url ) );
 		}
 	}
+
+	public function plugin_settings_links( $links ) {
+		$redirect_args = array(
+			'page' => 'saw-settings',
+		);
+		$redirect_url  = add_query_arg( $redirect_args, admin_url( 'admin.php' ) );
+		$settings_link = '<a href="' . esc_url( $redirect_url ) . '" title="' . esc_attr__( 'Settings', 'saw' ) . '">' . esc_html__( 'Settings', 'saw' ) . '</a>';
+		array_unshift( $links, $settings_link );
+		return $links;
+	}
+
 }
 
 new Stripe_Auto_Switcher();
