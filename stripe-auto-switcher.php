@@ -207,6 +207,13 @@ class Stripe_Auto_Switcher {
 
 new Stripe_Auto_Switcher();
 
+register_deactivation_hook( __FILE__, 'saw_plugin_deactivation' );
+
+function saw_plugin_deactivation() {
+	if ( function_exists( 'WC' ) ) {
+		WC()->queue()->cancel_all( 'saw_event_do_switch', array(), 'saw_events' );
+	}
+}
 
 function saw_sanitize_int( $value, $field_args, $field ) {
 	if ( ! is_numeric( $value ) ) {
