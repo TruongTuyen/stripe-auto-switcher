@@ -25,6 +25,7 @@ class Stripe_Auto_Switcher {
 		add_action( 'saw_event_do_switch', array( $this, 'do_schedule_action' ) );
 
 		add_action( 'update_option_saw-settings', array( $this, 'when_option_updated' ), 10, 3 );
+		add_action( 'activated_plugin', array( $this, 'plugin_activation_redirect' ), PHP_INT_MAX );
 	}
 
 	public function when_option_updated( $old_value, $value, $option ) {
@@ -203,6 +204,15 @@ class Stripe_Auto_Switcher {
 
 	}
 
+	public function plugin_activation_redirect( $plugin ) {
+		if ( plugin_basename( STRIPE_AUTO_SWITCHER_DIR . 'stripe-auto-switcher.php' ) === $plugin ) {
+			$redirect_args = array(
+				'page' => 'saw-settings',
+			);
+			$redirect_url = add_query_arg( $redirect_args, admin_url( 'admin.php' ) );
+			exit( wp_redirect( $redirect_url ) );
+		}
+	}
 }
 
 new Stripe_Auto_Switcher();
