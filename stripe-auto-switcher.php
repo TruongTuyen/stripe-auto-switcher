@@ -89,6 +89,7 @@ class Stripe_Auto_Switcher {
 				$item = $stripe_infos[ $key ];
 				if ( isset( $item['live_publishable_key'] ) && $item['live_publishable_key'] == $current_publishable_key && isset( $item['live_secret_key'] ) && $item['live_secret_key'] == $current_secret_key ) {
 					$get_index = (int) $index;
+					break;
 				}
 			}
 			$info_data = $stripe_infos[ array_keys( $stripe_infos )[0] ];
